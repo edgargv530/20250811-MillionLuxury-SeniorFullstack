@@ -1,0 +1,6 @@
+@MillionLuxury.TechhicalTest.ApiRest_HostAddress = http://localhost:5145
+
+GET {{MillionLuxury.TechhicalTest.ApiRest_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
