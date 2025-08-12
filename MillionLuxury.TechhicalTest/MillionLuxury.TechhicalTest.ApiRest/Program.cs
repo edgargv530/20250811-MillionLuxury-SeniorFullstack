@@ -1,8 +1,40 @@
+using AutoMapper;
+using MillionLuxury.TechhicalTest.ApiRest.Factories;
+using MillionLuxury.TechhicalTest.Application;
+using MillionLuxury.TechhicalTest.Infraestructure.Data;
+using MillionLuxury.TechhicalTest.Infraestructure.Data.Factories;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add Automaper clases
+builder.Services.AddSingleton(sp =>
+{
+    MapperConfigurationExpression currentMapperConfigurationExpression = new();
+    currentMapperConfigurationExpression.AddMaps(InfrastructureDataConfiguration.GetProfiles());
+    currentMapperConfigurationExpression.AddMaps(ApplicationConfiguration.GetProfiles());
+    return new MapperConfiguration(currentMapperConfigurationExpression, sp.GetRequiredService<ILoggerFactory>()).CreateMapper();
+});
 
-builder.Services.AddControllers();
+
+// Add MongoDbConnectionProperties
+var mongoDbConnectionProperties = builder.Configuration.GetSection("MongoDbConnectionProperties").Get<MongoDbConnectionProperties>() ??
+    throw new InvalidOperationException("MongoDbConnectionProperties configuration section is missing or invalid.");
+builder.Services.AddSingleton<IMongoDbConnectionProperties>(opt => mongoDbConnectionProperties);
+
+// Add repositories
+builder.Services.AddRepositories();
+
+// Add use cases
+builder.Services.AddUseCases();
+
+// Add controllers.
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 

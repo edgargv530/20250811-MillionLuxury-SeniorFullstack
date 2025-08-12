@@ -8,9 +8,9 @@ namespace MillionLuxury.TechhicalTest.Domain.Repositories
 
         Task<IEnumerable<Owner>> GetData();
 
-        Task Add(Owner owner);
+        Task<Owner> Add(Owner owner);
 
-        Task Update(Owner owner);
+        Task<Owner> Update(Owner owner);
 
         Task Delete(Guid id);
     }

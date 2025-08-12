@@ -21,8 +21,34 @@ namespace MillionLuxury.TechhicalTest.Application.UseCases.Owners
         public async Task<OwnerModel> Add(OwnerModel ownerModel)
         {
             var owner = _mapper.Map<Owner>(ownerModel);
-            await _ownerRepository.Add(owner);
-            var ownerAdded = _ownerRepository.GetById(owner.Id);
+            var ownerAdded = await _ownerRepository.Add(owner);
+            var ownerModelAdded = _mapper.Map<OwnerModel>(ownerAdded);
+            return ownerModelAdded;
+        }
+
+        public async Task Delete(Guid id)
+        {
+            await _ownerRepository.Delete(id);
+        }
+
+        public async Task<IEnumerable<OwnerModel>> GetData()
+        {
+            var owners = await _ownerRepository.GetData();
+            var ownersModel = _mapper.Map<IEnumerable<OwnerModel>>(owners);
+            return ownersModel;
+        }
+
+        public async Task<OwnerModel> GetById(Guid id)
+        {
+            var owner = await _ownerRepository.GetById(id);
+            var ownerModel = _mapper.Map<OwnerModel>(owner);
+            return ownerModel;
+        }
+
+        public async Task<OwnerModel> Update(OwnerModel ownerModel)
+        {
+            var owner = _mapper.Map<Owner>(ownerModel);
+            var ownerAdded = await _ownerRepository.Update(owner);
             var ownerModelAdded = _mapper.Map<OwnerModel>(ownerAdded);
             return ownerModelAdded;
         }

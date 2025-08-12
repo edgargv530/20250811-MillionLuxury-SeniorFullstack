@@ -33,9 +33,61 @@ namespace MillionLuxury.TechhicalTest.ApiRest.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> GetData()
         {
-            return Ok("Ok");
+            try
+            {
+                var owners = await _ownersUseCase.GetData();
+                return Ok(owners);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            try
+            {
+                var owner = await _ownersUseCase.GetById(id);
+                return Ok(owner);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(OwnerModel ownerModel)
+        {
+            try
+            {
+                var ownerAdded = await _ownersUseCase.Update(ownerModel);
+                return Ok(ownerAdded);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await _ownersUseCase.Delete(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
         }
     }
 }

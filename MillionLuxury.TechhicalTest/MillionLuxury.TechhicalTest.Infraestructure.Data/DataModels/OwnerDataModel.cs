@@ -5,8 +5,7 @@ namespace MillionLuxury.TechhicalTest.Infraestructure.Data.DataModels
 {
     internal class OwnerDataModel
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonGuidRepresentation(GuidRepresentation.Standard)]
         public Guid Id { get; set; }
 
         public string Name { get; set; } = null!;

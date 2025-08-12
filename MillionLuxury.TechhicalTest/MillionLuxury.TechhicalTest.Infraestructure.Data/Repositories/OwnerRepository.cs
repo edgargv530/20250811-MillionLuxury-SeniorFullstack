@@ -2,43 +2,52 @@
 using MillionLuxury.TechhicalTest.Domain.Entitites;
 using MillionLuxury.TechhicalTest.Domain.Repositories;
 using MillionLuxury.TechhicalTest.Infraestructure.Data.DataModels;
+using MillionLuxury.TechhicalTest.Infraestructure.Data.Factories;
+using MillionLuxury.TechhicalTest.Resources.Owners;
 using MongoDB.Driver;
 
 namespace MillionLuxury.TechhicalTest.Infraestructure.Data.Repositories
 {
     public class OwnerRepository : IOwnerRepository
     {
-        protected readonly string connectionString = "mongodb://localhost:27017";
-        protected readonly string databaseName = "PropertiesDB";
-        protected readonly string collectionName = "Owners";
-
         private readonly IMapper _mapper;
-        private IMongoCollection<OwnerDataModel> _collection;
+        private readonly IMongoDbConnectionProperties _mongoDbConnectionProperties;
+        private readonly IMongoCollection<OwnerDataModel> _collection;
 
-        public OwnerRepository(IMapper mapper)
+        public OwnerRepository(
+            IMapper mapper,
+            IMongoDbConnectionProperties mongoDbConnectionProperties)
         {
-            var client = new MongoClient(connectionString);
-            var db = client.GetDatabase(databaseName);
-            _collection = db.GetCollection<OwnerDataModel>(collectionName);
+            _mongoDbConnectionProperties = mongoDbConnectionProperties;
+            var client = new MongoClient(_mongoDbConnectionProperties.ConnectionString);
+            var db = client.GetDatabase(_mongoDbConnectionProperties.DatabaseName);
+            _collection = db.GetCollection<OwnerDataModel>(_mongoDbConnectionProperties.CollectionOwnerName);
             _mapper = mapper;
         }
 
-        public async Task Add(Owner owner)
+        public async Task<Owner> Add(Owner owner)
         {
             owner.Validate();
-
             var ownerDataModel = _mapper.Map<OwnerDataModel>(owner);
             await _collection.InsertOneAsync(ownerDataModel);
+            var ownerAdded = _mapper.Map<Owner>(ownerDataModel);
+            return ownerAdded;
         }
 
-        public Task Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var filter = Builders<OwnerDataModel>.Filter.Eq(o => o.Id, id);
+            var result = await _collection.DeleteOneAsync(filter);
+            if (!result.IsAcknowledged || result.DeletedCount == 0)
+            {
+                throw new ApplicationException(OwnersResources.ErrorDeleting);
+            }
         }
 
         public async Task<Owner> GetById(Guid id)
         {
-            var ownerDataModel = await _collection.FindAsync(o => o.Id.Equals(id));
+            var filter = Builders<OwnerDataModel>.Filter.Eq(o => o.Id, id);
+            var ownerDataModel = await _collection.Find(filter).FirstOrDefaultAsync();
             var owner = _mapper.Map<Owner>(ownerDataModel);
             return owner;
         }
@@ -50,9 +59,18 @@ namespace MillionLuxury.TechhicalTest.Infraestructure.Data.Repositories
             return owners;
         }
 
-        public Task Update(Owner owner)
+        public async Task<Owner> Update(Owner owner)
         {
-            throw new NotImplementedException();
+            owner.Validate();
+            var ownerDataModel = _mapper.Map<OwnerDataModel>(owner);
+            var filter = Builders<OwnerDataModel>.Filter.Eq(o => o.Id, owner.Id);
+            var result = await _collection.ReplaceOneAsync(filter, ownerDataModel);
+            if (!result.IsAcknowledged || result.ModifiedCount == 0)
+            {
+                throw new ApplicationException(OwnersResources.ErrorUpdating);
+            }
+            var ownerAdded = _mapper.Map<Owner>(ownerDataModel);
+            return ownerAdded;
         }
     }
 }
