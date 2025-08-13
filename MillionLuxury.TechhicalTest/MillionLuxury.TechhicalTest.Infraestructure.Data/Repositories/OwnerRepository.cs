@@ -6,6 +6,7 @@ using MillionLuxury.TechhicalTest.Domain.Values.QueryOptions;
 using MillionLuxury.TechhicalTest.Infraestructure.Data.DataModels;
 using MillionLuxury.TechhicalTest.Infraestructure.Data.DbConnection;
 using MillionLuxury.TechhicalTest.Resources.Owners;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace MillionLuxury.TechhicalTest.Infraestructure.Data.Repositories
@@ -56,15 +57,7 @@ namespace MillionLuxury.TechhicalTest.Infraestructure.Data.Repositories
 
         public async Task<QueryResponse<Owner>> GetData(QueryRequest queryRequest)
         {
-            ////(contains(Name, 'nombre') or endswith(Name, '7')) and address eq 'Address 6'
-            //var builderFilter = Builders<OwnerDataModel>.Filter;
-            ////builderFilter.Where(o => o.Name.Contains("Name") || o.Name.EndsWith("7"));
-            //var filter = builderFilter.Where(o => (o.Name.ToUpper().Contains("nombre".ToUpper()) || o.Name.EndsWith("7")) || o.Address.Equals("Address 6"));
-
-            var filter = queryRequest.Filters != null && queryRequest.Filters.Any()
-                    ? BuildMongoFilter(queryRequest.Filters, null)
-                    : Builders<OwnerDataModel>.Filter.Empty;
-
+            var filter = BuildMongoFilter(queryRequest.Filters, null!);
             var sortDefinitions = new List<SortDefinition<OwnerDataModel>>();
 
             if (queryRequest.OrdersBy is not null && queryRequest.OrdersBy.Any())
@@ -83,7 +76,6 @@ namespace MillionLuxury.TechhicalTest.Infraestructure.Data.Repositories
                     }
                 }
             }
-
 
             var ownerDataModels = await _collection
                 .Find(filter)
@@ -105,51 +97,96 @@ namespace MillionLuxury.TechhicalTest.Infraestructure.Data.Repositories
 
         private FilterDefinition<OwnerDataModel> BuildMongoFilter(IEnumerable<IQueryFilter> filters, QueryFilterComplex parent)
         {
-            var builder = Builders<OwnerDataModel>.Filter;
+            if (filters is null || !filters.Any())
+            {
+                return Builders<OwnerDataModel>.Filter.Empty;
+            }
+
             var filterList = new List<FilterDefinition<OwnerDataModel>>();
-
-            foreach (var filter in filters)
+            foreach (var queryFilter in filters)
             {
-                if (filter is QueryFilterSentence sentence)
+                if (queryFilter is QueryFilterComplex queryFilterComplex)
                 {
-                    // Aquí puedes expandir según los operadores que soportes
-                    switch (sentence.Operator)
-                    {
-                        case FilterOperator.Equal:
-                            filterList.Add(builder.Eq(sentence.FieldName, sentence.Value));
-                            break;
-                        case FilterOperator.Contains:
-                            filterList.Add(builder.Regex(sentence.FieldName, new MongoDB.Bson.BsonRegularExpression(sentence.Value!.ToString(), "i")));
-                            break;
-                        case FilterOperator.StartsWith:
-                            filterList.Add(builder.Regex(sentence.FieldName, new MongoDB.Bson.BsonRegularExpression("^" + sentence.Value!.ToString(), "i")));
-                            break;
-                        case FilterOperator.EndsWith:
-                            filterList.Add(builder.Regex(sentence.FieldName, new MongoDB.Bson.BsonRegularExpression(sentence.Value!.ToString() + "$", "i")));
-                            break;
-                            // Agrega más operadores según sea necesario
-                    }
+                    filterList.Add(BuildMongoFilter(queryFilterComplex.Filters, queryFilterComplex));
                 }
-                else if (filter is QueryFilterComplex complex)
+                else if (queryFilter is QueryFilterSentence queryFilterSentence)
                 {
-                    var innerFilter = BuildMongoFilter(complex.Filters, complex);
-                    filterList.Add(innerFilter);
+                    filterList.Add(BuildMongoFilterSentence(queryFilterSentence));
                 }
             }
 
-            //return filterList;
-
-            // Combina los filtros según el predicado (AND/OR)
-            if (parent is QueryFilterComplex complexFilter)
+            if (parent is not null && parent.PredicateType == FilterPredicateType.Or)
             {
-                return complexFilter.PredicateType == FilterPredicateType.And
-                    ? builder.And(filterList)
-                    : builder.Or(filterList);
+                return Builders<OwnerDataModel>.Filter.Or(filterList);
             }
 
-            // Por defecto, combina con AND
-            //return builder.And(filterList);
-            return null!;
+            return Builders<OwnerDataModel>.Filter.And(filterList);
+        }
+
+        private FilterDefinition<OwnerDataModel> BuildMongoFilterSentence(QueryFilterSentence queryFilterSentence)
+        {
+            if (string.IsNullOrWhiteSpace(queryFilterSentence?.FieldName))
+            {
+                return Builders<OwnerDataModel>.Filter.Empty;
+            }
+
+            var property = typeof(OwnerDataModel).GetProperties().FirstOrDefault(p => p.Name.ToLower().Equals(queryFilterSentence.FieldName.ToLower()));
+            if (property is null)
+            {
+                return Builders<OwnerDataModel>.Filter.Empty;
+            }
+
+            var builder = Builders<OwnerDataModel>.Filter;
+            if (queryFilterSentence.Operator == FilterOperator.Equal)
+            {
+                return builder.Eq(property.Name, queryFilterSentence.Value);
+            }
+            else if (queryFilterSentence.Operator == FilterOperator.NotEqual)
+            {
+                return builder.Ne(property.Name, queryFilterSentence.Value);
+            }
+            else if (queryFilterSentence.Operator == FilterOperator.GreaterThan)
+            {
+                return builder.Gt(property.Name, queryFilterSentence.Value);
+            }
+            else if (queryFilterSentence.Operator == FilterOperator.GreaterThanOrEqual)
+            {
+                return builder.Gte(property.Name, queryFilterSentence.Value);
+            }
+            else if (queryFilterSentence.Operator == FilterOperator.LessThan)
+            {
+                return builder.Lt(property.Name, queryFilterSentence.Value);
+            }
+            else if (queryFilterSentence.Operator == FilterOperator.LessThanOrEqual)
+            {
+                return builder.Lte(property.Name, queryFilterSentence.Value);
+            }
+            else if (queryFilterSentence.Operator == FilterOperator.Contains)
+            {
+                return builder.Regex(property.Name, new BsonRegularExpression(queryFilterSentence.Value!.ToString(), "i"));
+            }
+            else if (queryFilterSentence.Operator == FilterOperator.NotContains)
+            {
+                return builder.Not(builder.Regex(property.Name, new BsonRegularExpression(queryFilterSentence.Value!.ToString(), "i")));
+            }
+            else if (queryFilterSentence.Operator == FilterOperator.StartsWith)
+            {
+                return builder.Regex(property.Name, new BsonRegularExpression($"^{queryFilterSentence.Value}", "i"));
+            }
+            else if (queryFilterSentence.Operator == FilterOperator.NotStartsWith)
+            {
+                return builder.Not(builder.Regex(property.Name, new BsonRegularExpression($"^{queryFilterSentence.Value}", "i")));
+            }
+            else if (queryFilterSentence.Operator == FilterOperator.EndsWith)
+            {
+                return builder.Regex(property.Name, new BsonRegularExpression($"{queryFilterSentence.Value}$", "i"));
+            }
+            else if (queryFilterSentence.Operator == FilterOperator.NotEndsWith)
+            {
+                return builder.Not(builder.Regex(property.Name, new BsonRegularExpression($"{queryFilterSentence.Value}$")));
+            }
+
+            return Builders<OwnerDataModel>.Filter.Empty;
         }
 
         public async Task<Owner> Update(Owner owner)
@@ -165,7 +202,5 @@ namespace MillionLuxury.TechhicalTest.Infraestructure.Data.Repositories
             var ownerAdded = _mapper.Map<Owner>(ownerDataModel);
             return ownerAdded;
         }
-
-
     }
 }
