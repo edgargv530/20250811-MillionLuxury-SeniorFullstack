@@ -2,6 +2,7 @@
 using MillionLuxury.TechhicalTest.Application.Models.Owners;
 using MillionLuxury.TechhicalTest.Domain.Entitites;
 using MillionLuxury.TechhicalTest.Domain.Repositories;
+using MillionLuxury.TechhicalTest.Domain.Values.QueryOptions;
 
 namespace MillionLuxury.TechhicalTest.Application.UseCases.Owners
 {
@@ -31,11 +32,11 @@ namespace MillionLuxury.TechhicalTest.Application.UseCases.Owners
             await _ownerRepository.Delete(id);
         }
 
-        public async Task<IEnumerable<OwnerModel>> GetData()
+        public async Task<QueryResponse<OwnerModel>> GetData(QueryRequest queryRequest)
         {
-            var owners = await _ownerRepository.GetData();
-            var ownersModel = _mapper.Map<IEnumerable<OwnerModel>>(owners);
-            return ownersModel;
+            var owners = await _ownerRepository.GetData(queryRequest);
+            var queryResponse = _mapper.Map<QueryResponse<OwnerModel>>(owners);
+            return queryResponse;
         }
 
         public async Task<OwnerModel> GetById(Guid id)

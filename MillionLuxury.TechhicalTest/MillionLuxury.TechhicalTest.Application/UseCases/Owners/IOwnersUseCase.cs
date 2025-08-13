@@ -1,4 +1,5 @@
 ﻿using MillionLuxury.TechhicalTest.Application.Models.Owners;
+using MillionLuxury.TechhicalTest.Domain.Values.QueryOptions;
 
 namespace MillionLuxury.TechhicalTest.Application.UseCases.Owners
 {
@@ -6,7 +7,7 @@ namespace MillionLuxury.TechhicalTest.Application.UseCases.Owners
     {
         Task<OwnerModel> Add(OwnerModel ownerModel);
 
-        Task<IEnumerable<OwnerModel>> GetData();
+        Task<QueryResponse<OwnerModel>> GetData(QueryRequest queryRequest);
 
         Task<OwnerModel> GetById(Guid id);
 

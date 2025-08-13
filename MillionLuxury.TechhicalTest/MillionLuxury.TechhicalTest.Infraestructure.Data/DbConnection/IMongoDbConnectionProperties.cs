@@ -1,4 +1,4 @@
-﻿namespace MillionLuxury.TechhicalTest.Infraestructure.Data.Factories
+﻿namespace MillionLuxury.TechhicalTest.Infraestructure.Data.DbConnection
 {
     public interface IMongoDbConnectionProperties
     {

@@ -1,4 +1,5 @@
 ﻿using MillionLuxury.TechhicalTest.Domain.Entitites;
+using MillionLuxury.TechhicalTest.Domain.Values.QueryOptions;
 
 namespace MillionLuxury.TechhicalTest.Domain.Repositories
 {
@@ -6,7 +7,7 @@ namespace MillionLuxury.TechhicalTest.Domain.Repositories
     {
         Task<Owner> GetById(Guid id);
 
-        Task<IEnumerable<Owner>> GetData();
+        Task<QueryResponse<Owner>> GetData(QueryRequest queryRequest);
 
         Task<Owner> Add(Owner owner);
 

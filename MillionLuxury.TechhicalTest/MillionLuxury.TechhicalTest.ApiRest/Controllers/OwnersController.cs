@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MillionLuxury.TechhicalTest.ApiRest.Extensions;
 using MillionLuxury.TechhicalTest.Application.Models.Owners;
 using MillionLuxury.TechhicalTest.Application.UseCases.Owners;
 
@@ -37,7 +38,8 @@ namespace MillionLuxury.TechhicalTest.ApiRest.Controllers
         {
             try
             {
-                var owners = await _ownersUseCase.GetData();
+                var queryRequest = Request.Query.GetODataRequest();
+                var owners = await _ownersUseCase.GetData(queryRequest);
                 return Ok(owners);
             }
             catch (Exception ex)

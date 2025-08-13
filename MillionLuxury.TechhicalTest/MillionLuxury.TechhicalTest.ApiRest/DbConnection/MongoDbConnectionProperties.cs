@@ -1,6 +1,6 @@
-﻿using MillionLuxury.TechhicalTest.Infraestructure.Data.Factories;
+﻿using MillionLuxury.TechhicalTest.Infraestructure.Data.DbConnection;
 
-namespace MillionLuxury.TechhicalTest.ApiRest.Factories
+namespace MillionLuxury.TechhicalTest.ApiRest.DbConnection
 {
     public class MongoDbConnectionProperties : IMongoDbConnectionProperties
     {

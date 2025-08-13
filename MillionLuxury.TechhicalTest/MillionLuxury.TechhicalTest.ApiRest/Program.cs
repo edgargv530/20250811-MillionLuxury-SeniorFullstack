@@ -1,8 +1,8 @@
 using AutoMapper;
-using MillionLuxury.TechhicalTest.ApiRest.Factories;
+using MillionLuxury.TechhicalTest.ApiRest.DbConnection;
 using MillionLuxury.TechhicalTest.Application;
 using MillionLuxury.TechhicalTest.Infraestructure.Data;
-using MillionLuxury.TechhicalTest.Infraestructure.Data.Factories;
+using MillionLuxury.TechhicalTest.Infraestructure.Data.DbConnection;
 
 var builder = WebApplication.CreateBuilder(args);
 
