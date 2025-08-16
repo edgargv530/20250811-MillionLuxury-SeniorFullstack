@@ -1,4 +1,4 @@
-﻿namespace MillionLuxury.TechhicalTest.Domain.Values.QueryOptions
+﻿namespace MillionLuxury.TechhicalTest.Domain.ValuesObjects.QueryOptions
 {
     public class QueryOrderBy
     {

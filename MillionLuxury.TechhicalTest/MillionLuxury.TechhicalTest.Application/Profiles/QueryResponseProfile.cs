@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MillionLuxury.TechhicalTest.Domain.Values.QueryOptions;
+using MillionLuxury.TechhicalTest.Domain.ValuesObjects.QueryOptions;
 
 namespace MillionLuxury.TechhicalTest.Application.Profiles
 {

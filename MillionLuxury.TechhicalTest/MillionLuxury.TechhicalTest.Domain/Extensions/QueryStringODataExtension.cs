@@ -1,5 +1,5 @@
 ﻿using MillionLuxury.TechhicalTest.Domain.Enums;
-using MillionLuxury.TechhicalTest.Domain.Values.QueryOptions;
+using MillionLuxury.TechhicalTest.Domain.ValuesObjects.QueryOptions;
 using MillionLuxury.TechhicalTest.Resources.Validations;
 using System.Text;
 using System.Text.RegularExpressions;

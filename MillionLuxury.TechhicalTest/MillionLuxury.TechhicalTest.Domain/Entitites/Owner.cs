@@ -16,10 +16,10 @@ namespace MillionLuxury.TechhicalTest.Domain.Entitites
 
         protected override void CommonValidations()
         {
-            //if (Id == Guid.Empty)
-            //{
-            //    ErrorMessages.Add(string.Format(CommonValidationMessages.AtributeGuidEmpty, nameof(Id)));
-            //}
+            if (Id == Guid.Empty)
+            {
+                ErrorMessages.Add(string.Format(CommonValidationMessages.AtributeGuidEmpty, nameof(Id)));
+            }
 
             ValidateRequiredStringFieldAndMaxLength(Name, 100, nameof(Name));
             ValidateRequiredStringFieldAndMaxLength(Address, 200, nameof(Address));

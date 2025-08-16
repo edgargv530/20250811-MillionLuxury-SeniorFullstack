@@ -1,6 +1,6 @@
 ﻿using MillionLuxury.TechhicalTest.Domain.Enums;
 
-namespace MillionLuxury.TechhicalTest.Domain.Values
+namespace MillionLuxury.TechhicalTest.Domain.ValuesObjects
 {
     public class Error
     {

@@ -1,5 +1,5 @@
 ﻿using MillionLuxury.TechhicalTest.Domain.Entitites;
-using MillionLuxury.TechhicalTest.Domain.Values.QueryOptions;
+using MillionLuxury.TechhicalTest.Domain.ValuesObjects.QueryOptions;
 
 namespace MillionLuxury.TechhicalTest.Domain.Repositories
 {

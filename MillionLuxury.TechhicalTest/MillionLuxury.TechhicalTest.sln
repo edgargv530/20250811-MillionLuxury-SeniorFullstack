@@ -14,9 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Others", "3. Others", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.1. Enterprise Business Rules", "1.1. Enterprise Business Rules", "{DD59CAB1-4A86-44D9-A23B-A20B87B9886B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.2. Infraestructure", "1.2. Infraestructure", "{30D7A181-DD71-4EC6-A030-FEBD2EEF7887}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.3. Infraestructure", "1.3. Infraestructure", "{30D7A181-DD71-4EC6-A030-FEBD2EEF7887}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.3. Application Business Rules", "1.3. Application Business Rules", "{25AD6546-E5DD-4DAD-B018-1A236653CCFC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.2. Application Business Rules", "1.2. Application Business Rules", "{25AD6546-E5DD-4DAD-B018-1A236653CCFC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.4. Interface Adapters", "1.4. Interface Adapters", "{B3ACBD1F-F264-46F1-B4FF-0101A6F3E1CE}"
 EndProject

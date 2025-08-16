@@ -2,7 +2,7 @@
 using MillionLuxury.TechhicalTest.Domain.Entitites;
 using MillionLuxury.TechhicalTest.Domain.Enums;
 using MillionLuxury.TechhicalTest.Domain.Repositories;
-using MillionLuxury.TechhicalTest.Domain.Values.QueryOptions;
+using MillionLuxury.TechhicalTest.Domain.ValuesObjects.QueryOptions;
 using MillionLuxury.TechhicalTest.Infraestructure.Data.DataModels;
 using MillionLuxury.TechhicalTest.Infraestructure.Data.DbConnection;
 using MillionLuxury.TechhicalTest.Resources.Owners;

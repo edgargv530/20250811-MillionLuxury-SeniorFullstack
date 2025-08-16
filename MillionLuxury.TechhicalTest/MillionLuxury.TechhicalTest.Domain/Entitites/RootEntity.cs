@@ -1,6 +1,5 @@
 ﻿using MillionLuxury.TechhicalTest.Domain.Exceptions;
 using MillionLuxury.TechhicalTest.Resources.Validations;
-using System.Text.RegularExpressions;
 
 namespace MillionLuxury.TechhicalTest.Domain.Entitites
 {

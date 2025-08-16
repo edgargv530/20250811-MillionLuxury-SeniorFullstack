@@ -11,3 +11,20 @@ To install the lastest version of MongoDB Community Server, you can use the foll
 docker pull mongodb/mongodb-community-server:latest
 docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:latest
 ```
+
+
+# Instalar paquetes necesarios
+npm install
+
+# Ejecutar back con Node.js
+node app.js
+
+# Ejecutar react apps con Node.js
+npm run dev
+
+# Instalar TailWind
+npm install vite@latest
+npm install tailwindcss @tailwindcss/vite
+
+# Use Tailwind CSS
+@import "tailwindcss"

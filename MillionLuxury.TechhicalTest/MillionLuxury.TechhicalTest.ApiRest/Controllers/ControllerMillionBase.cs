@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MillionLuxury.TechhicalTest.Resources.Validations;
 using MillionLuxury.TechhicalTest.Domain.Exceptions;
-using MillionLuxury.TechhicalTest.Domain.Values;
+using MillionLuxury.TechhicalTest.Domain.ValuesObjects;
 using MillionLuxury.TechhicalTest.Domain.Enums;
 using System.Text.Encodings.Web;
 using System.Text.Json;
