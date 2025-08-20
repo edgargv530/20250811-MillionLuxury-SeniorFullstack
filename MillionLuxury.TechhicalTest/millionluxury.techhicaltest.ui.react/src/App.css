@@ -2,3 +2,35 @@
     background-color: #141d40;
     color: #b5b5b5;
 }
+
+.column-actions {
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
+}
+
+.customItemMenu {
+    color: #b5b5b5;
+    background-color: transparent;
+}
+
+    .customItemMenu:hover {
+        color: #141d38;
+        background-color: #b5b5b5;
+    }
+
+.customItemMenuDisabled {
+    color: #b5b5b5;
+    background-color: transparent;
+}
+
+
+.customGridMenu {
+    color: #141d38;
+    background-color: transparent;
+}
+
+    .customGridMenu:hover {
+        color: #b5b5b5;
+        background-color: #141d40;
+    }

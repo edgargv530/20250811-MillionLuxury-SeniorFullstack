@@ -13,7 +13,7 @@
             }
             set
             {
-                _top = value.HasValue ? (value < 0 ? 10 : (value > 100 ? 100 : value)) : 10;
+                _top = value.HasValue ? (value < 0 ? 10 : (value > 100 ? 100 : value)) : 100;
             }
         }
 
@@ -25,7 +25,7 @@
             }
             set
             {
-                _skip = value.HasValue && value < 0 ? 0 : value;
+                _skip = value.HasValue ? (value < 0 ? 0 : value) : 0;
             }
         }
 

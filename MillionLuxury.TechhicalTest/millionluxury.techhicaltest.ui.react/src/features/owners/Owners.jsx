@@ -1,20 +1,23 @@
 import { useState, useEffect } from "react";
 import Card from "../../components/molecules/Card";
 import { fetchOwners } from "./ownersRepository.js";
+import Grid from "../../components/molecules/Grid";
 
 export default function Owners() {
-	const [isFetching, setIsFetching] = useState(false);
+	const [isFetching, setIsFetching] = useState(true);
 	const [responseOwners, setResponse] = useState([]);
-	const [error, setError] = useState(null);
+	const [error, setError] = useState();
+
+	const columns = ['Id', 'Name', 'Address'];
 
 	useEffect(() => {
 		async function fetchData() {
 			try {
 				setIsFetching(true);
-				const owners = await fetchOwners(`$filter=contains(Name, 'nombre')&$orderby=name desc`);
+				const owners = await fetchOwners(`$top=5&$skip=0&$orderby=name`);
 				setResponse(owners);
 			} catch (err) {
-				setError(err.message);
+				setError({ message: err.message || 'Could not fetch owners' });
 			} finally {
 				setIsFetching(false);
 			}
@@ -25,25 +28,9 @@ export default function Owners() {
 
 	return (
 		<Card title="Owners">
-			<table className="table">
-				<thead>
-					<tr>
-						<th scope="col">Actions</th>
-						<th scope="col">Name</th>
-						<th scope="col">Addres</th>						
-					</tr>
-				</thead>
-				<tbody>
-					{/*{isFetching && (<p>Cargando</p>) }*/}
-					{responseOwners.Data && responseOwners.Data.map((owner) => (
-						<tr key={owner.Id}>
-							<td>Actions</td>
-							<td>{owner.Name}</td>
-							<td>{owner.Address}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
+			{isFetching && (<p>Cargando</p>)}
+			{!isFetching && error && (<p>{error.message}</p>)}
+			{!isFetching && !error && (<Grid columns={columns} response={responseOwners}></Grid>)}
 		</Card>
 	);
 }

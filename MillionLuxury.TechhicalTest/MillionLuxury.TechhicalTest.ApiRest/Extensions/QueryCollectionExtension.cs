@@ -7,17 +7,22 @@ namespace MillionLuxury.TechhicalTest.ApiRest.Extensions
     {
         public static QueryRequest GetODataRequest(this IQueryCollection source)
         {
-            var queryRequest = new QueryRequest();
-
             if (!source.Any())
             {
-                return queryRequest;
+                return new QueryRequest()
+                {
+                    Top = 100,
+                    Skip = 0
+                };
             }
 
-            queryRequest.Top = CastTop(source);
-            queryRequest.Skip = CastSkip(source);
-            queryRequest.Filters = CastFilter(source);
-            queryRequest.OrdersBy = CastOrderBy(source);
+            var queryRequest = new QueryRequest
+            {
+                Top = CastTop(source),
+                Skip = CastSkip(source),
+                Filters = CastFilter(source),
+                OrdersBy = CastOrderBy(source)
+            };
 
             return queryRequest;
         }

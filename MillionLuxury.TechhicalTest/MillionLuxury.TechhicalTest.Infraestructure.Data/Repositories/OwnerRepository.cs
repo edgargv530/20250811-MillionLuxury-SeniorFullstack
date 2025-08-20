@@ -87,8 +87,8 @@ namespace MillionLuxury.TechhicalTest.Infraestructure.Data.Repositories
             var owners = _mapper.Map<IEnumerable<Owner>>(ownerDataModels);
             var queryResponse = new QueryResponse<Owner>
             {
-                Top = queryRequest.Top ?? 10,
-                Skip = queryRequest.Skip ?? 0,
+                Top = queryRequest.Top.HasValue ? queryRequest.Top.Value : 100,
+                Skip = queryRequest.Skip.HasValue ? queryRequest.Skip.Value : 0,
                 TotalRows = await _collection.CountDocumentsAsync(filter),
                 Data = owners
             };
