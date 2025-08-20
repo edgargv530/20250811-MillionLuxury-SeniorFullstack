@@ -1,4 +1,3 @@
-import '../../App.css'
 export default function Grid({ columns, response, children }) {
 	const pageNumber = Math.ceil((response.Skip / response.Top) + 1);
 	const totalPages = Math.ceil(response.TotalRows / response.Top);
