@@ -1,6 +1,8 @@
-import UserInfo from './UserInfo';
+import UserInfo from '../molecules/UserInfo';
+
 export default function Header() {
-	const applicationName = 'Properties App'; // You can set this dynamically if needed
+	const applicationName = 'Properties App';
+
 	return (
 		<div className="row p-2 customBackGround">
 			{/* Toggle button */}
@@ -27,7 +29,7 @@ export default function Header() {
 					<i className="fs-3 bi-person-fill"></i>
 				</span>
 				<div className="dropdown-menu dropdown-menu-end text-center bg-transparent border-0">
-					<UserInfo applicationName={applicationName} />
+					<UserInfo title={applicationName} userName={'User Name'} userEmail={'email@dom.com'} />
 				</div>
 			</div>
 		</div>

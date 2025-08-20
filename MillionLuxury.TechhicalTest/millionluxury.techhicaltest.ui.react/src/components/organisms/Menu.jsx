@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MENU_DATA } from '../data/menu-data';
+import { MENU_DATA } from '../../data/menu-data';
 
 export default function Menu({onSelect}) {
 	const [selectedOption, setSelectedOption] = useState('welcome');

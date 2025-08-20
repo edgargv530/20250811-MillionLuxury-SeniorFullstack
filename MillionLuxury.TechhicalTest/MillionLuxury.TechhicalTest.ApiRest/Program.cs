@@ -6,6 +6,22 @@ using MillionLuxury.TechhicalTest.Infraestructure.Data.DbConnection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Cors
+var corsUrls = builder.Configuration.GetSection("UrlCors").Get<string[]>();
+if (corsUrls != null)
+{
+    builder.Services.AddCors(opt =>
+    {
+        opt.AddPolicy("CORS", policy =>
+        {
+            policy
+                .WithOrigins(corsUrls)
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    });
+}
+
 // Add Automaper clases
 builder.Services.AddSingleton(sp =>
 {
@@ -44,6 +60,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+}
+
+// Cors
+if (corsUrls != null)
+{
+    app.UseCors("CORS");
 }
 
 app.UseHttpsRedirection();
