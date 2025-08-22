@@ -28,7 +28,7 @@ export default function Owners() {
 
 
 	function handleChangeState(state) {
-		console.log(`Change state: ${state.top}`);
+		//console.log(`Change state: ${state.top}`);
 		fetchData(state.top, state.skip);
 	}
 

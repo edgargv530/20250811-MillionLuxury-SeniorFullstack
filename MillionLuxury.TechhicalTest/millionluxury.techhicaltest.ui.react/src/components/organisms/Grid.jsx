@@ -1,32 +1,47 @@
+import { useState } from "react";
 import Pagination from "../molecules/Pagination";
 import GridHead from "../molecules/GridHead";
 
 export default function Grid({ columns, response, onChangeState }) {
+	const [stateGrid, setStateGrid] = useState({
+		columns,
+		top: response.Top,
+		skip: response.Skip,
+		filters: [],
+		orderBy: null
+	});
+
 	const pageNumber = Math.ceil((response.Skip / response.Top) + 1);
 	const totalPages = Math.ceil(response.TotalRows / response.Top);
 
-	let state = {
-		top: response.Top,
-		skip: response.Skip,
-		filter: null,
-		orderBy: null
-	}
+	//let state = {
+	//	top: response.Top,
+	//	skip: response.Skip,
+	//	filter: null,
+	//	orderBy: null
+	//}
 
 	function handleChangePage(page) {
-		state.skip = (page - 1) * response.Top;
-		onChangeState(state);
+		stateGrid.skip = (page - 1) * response.Top;
+		setStateGrid(stateGrid);
+		//console.log('handleChangePage');
+		//console.log(stateGrid);
+		onChangeState(stateGrid);
+
 	}
 
 	function handleChangeItemsPerPage(itemsPerPage) {
-		state.top = itemsPerPage;
-		state.skip = 0;
-		onChangeState(state);
+		stateGrid.top = itemsPerPage;
+		stateGrid.skip = 0;
+		setStateGrid(stateGrid);
+		onChangeState(stateGrid);
 	}
 
-	function handleChangeFilter(filters) {
-		state.filter = filters;
+	function handleChangeFilters(filters) {
+		stateGrid.filters = filters;
 		//console.log(filters);
-		onChangeState(state);
+		setStateGrid(stateGrid);
+		//onChangeState(stateGrid);
 	}
 
 	return (
@@ -35,7 +50,7 @@ export default function Grid({ columns, response, onChangeState }) {
 				<caption>
 					<Pagination pageNumber={pageNumber} totalPages={totalPages} itemsPerPage={response.Top} onChangePage={handleChangePage} onChangeItemsPerPage={handleChangeItemsPerPage} />
 				</caption>
-				<GridHead columns={columns} onChangeFilter={handleChangeFilter} />
+				<GridHead stateGrid={stateGrid} onChangeFilters={handleChangeFilters} />
 				<tbody>
 					{response.Data && response.Data.map((owner) => (
 						<tr key={owner.Id}>

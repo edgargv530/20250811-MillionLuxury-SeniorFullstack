@@ -1,7 +1,7 @@
 export async function fetchOwners(queryString) {
 	const url = `https://localhost:7178/api/owners${queryString ? `${"?"}${queryString}` : ''}`;
 
-	console.log(`Fetching owners from: ${url}`);
+	//console.log(`Fetching owners from: ${url}`);
 	const response = await fetch(url, {
 		method: 'GET',
 		headers: {
